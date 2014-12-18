@@ -29,7 +29,8 @@ def mainfunc():
 					savefile(subreddit, x, x.url, fn, postTitle)
 
 def savefile(subreddit, submission, url, filename, postTitle):
-	print(url, filename)
+	if 'imgur' in url:
+		print(url, filename)
 
 	if '.jpg' not in url and '.png' not in url and '.gif' not in url:
 		if 'http://imgur.com/a/' in url:
