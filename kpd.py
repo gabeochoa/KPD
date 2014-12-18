@@ -6,26 +6,27 @@ import requests
 from bs4 import BeautifulSoup
 
 def mainfunc():
-	subreddit = 'kpics'
+	subreddits = ['kpics', 'apink', 'girlsday', 'AceOfAngels8']
 	names = ['Bomi', 'Eunji', 'Choa', 'Jimin', 'Hyeri']
 
 	r = praw.Reddit(user_agent='KPD by /u/gabe1118')
 
-	if not os.path.exists(subreddit):
-   		os.makedirs(subreddit)
-	
-	submissions = r.get_subreddit(subreddit).get_new(limit=10000)
-	for x in submissions:
-		strs = str(x)
-		postTitle = (strs.split("::"))[1]
-		for Iname in names:
-			fn = subreddit+os.sep+Iname
-			if not os.path.exists(fn):
-				os.mkdir(fn)
-			if postTitle.lower().find(Iname.lower()) == -1:
-				continue
-			else :
-				savefile(subreddit, x, x.url, fn, postTitle)
+	for subreddit in subreddits:
+		if not os.path.exists(subreddit):
+	   		os.makedirs(subreddit)
+		
+		submissions = r.get_subreddit(subreddit).get_new(limit=10)
+		for x in submissions:
+			strs = str(x)
+			postTitle = (strs.split("::"))[1]
+			for Iname in names:
+				fn = subreddit+os.sep+Iname
+				if not os.path.exists(fn):
+					os.mkdir(fn)
+				if postTitle.lower().find(Iname.lower()) == -1:
+					continue
+				else :
+					savefile(subreddit, x, x.url, fn, postTitle)
 
 def savefile(subreddit, submission, url, filename, postTitle):
 	print(url, filename)
