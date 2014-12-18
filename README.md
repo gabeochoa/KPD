@@ -10,8 +10,8 @@ those keywords.
 
 It will place the images into a folder in this format:
 
-subreddit/keyword/postname.extention or
-subreddit/keyword/postname/imgurfilename.extention (for albums)
+	subreddit/keyword/postname.extention or
+	subreddit/keyword/postname/filename.extention (for albums)
 
 ===
 
