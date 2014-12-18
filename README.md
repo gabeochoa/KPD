@@ -16,7 +16,7 @@ subreddit/keyword/postname/imgurfilename.extention (for albums)
 ===
 
 You can run by typing: 
-	>python kpd.py
+	python kpd.py
 ===
 
 Right now you must change the arrays at the beginning to change subreddits and search terms
