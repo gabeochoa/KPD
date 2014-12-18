@@ -35,6 +35,7 @@ from bs4 import BeautifulSoup # used to parse for imgur albums
 	Allow keywords for each subreddit
 	Make it into a taskbar app
 	Fix folder creation code
+	Support other images/video sites (gfycat, youtube, flicker)
 
 ===
 
