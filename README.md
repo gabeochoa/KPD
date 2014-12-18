@@ -16,6 +16,7 @@ It will place the images into a folder in this format:
 ===
 
 You can run by typing: 
+
 	python kpd.py
 ===
 
@@ -27,6 +28,13 @@ import os # makes directories
 import time # used to rerun mainFunc every 30 sec
 import requests # used to get html for BS
 from bs4 import BeautifulSoup # used to parse for imgur albums
+
+===
+	TODO:
+	
+	Allow keywords for each subreddit
+	Make it into a taskbar app
+	Fix folder creation code
 
 ===
 
