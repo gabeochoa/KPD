@@ -38,5 +38,4 @@ from bs4 import BeautifulSoup # used to parse for imgur albums
 
 ===
 
-Apologies for any bad syntax or practicies, I am usually a C++/Java programmer,
-and am still learning. 
+Apologies for any bad syntax or practicies.
