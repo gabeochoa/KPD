@@ -6,7 +6,7 @@ An image downloader for reddit (imgur)
 
 v3.0
 
-	Gfycat now nupported
+	Gfycat now supported
 	Allows keyword for each subreddit (* for all)
 
 ===
