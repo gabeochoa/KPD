@@ -3,6 +3,11 @@ KPD
 
 An image downloader for reddit (imgur)
 
+
+v3.0
+	Gfycat now nupported
+	Allows keyword for each subreddit (* for all)
+
 ===
 
 The program will go through each of the subreddits and search for the terms in names. Then it will download any images with posts containing
@@ -16,8 +21,13 @@ It will place the images into a folder in this format:
 ===
 
 You can run by typing: 
-
 	python kpd.py
+
+Make sure to have a config.txt file, the format for subreddits is
+	subreddit :: name, name2, name3 
+	subreddit :: * 
+	^ for all pictures
+
 ===
 
 Right now you must change the arrays at the beginning to change subreddits and search terms
@@ -32,10 +42,9 @@ from bs4 import BeautifulSoup # used to parse for imgur albums
 ===
 	TODO:
 	
-	Allow keywords for each subreddit
 	Make it into a taskbar app
 	Fix folder creation code
-	Support other images/video sites (gfycat, youtube, flicker)
+	Support other images/video sites (youtube, flicker)
 
 ===
 
