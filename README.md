@@ -45,7 +45,7 @@ from bs4 import BeautifulSoup # used to parse for imgur albums
 	TODO:
 	
 	Make it into a taskbar app
-	Fix folder creation code
+	Update folder creation code
 	Support other images/video sites (youtube, flicker)
 
 ===
