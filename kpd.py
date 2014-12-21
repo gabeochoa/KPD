@@ -27,16 +27,13 @@ def parsefile():
 	return
 
 def mainfunc():
-	#subreddits = ['kpics', 'apink', 'girlsday', 'AceOfAngels8']
-	#names = ['Bomi', 'Eunji', 'Choa', 'Jimin', 'Hyeri']
-
 	r = praw.Reddit(user_agent='KPD by /u/gabe1118 v3.0')
 
 	for subreddit, keywords in subreddits.items():
 		if not os.path.exists(subreddit):
 			os.makedirs(subreddit)
 	
-		submissions = r.get_subreddit(subreddit).get_new(limit=100)
+		submissions = r.get_subreddit(subreddit).get_new(limit=10000)
 
 		downloadAll = False
 		if (keywords[0]).strip() == '*':
@@ -65,7 +62,7 @@ def savefile(subreddit, submission, url, filename, postTitle):
 		postTitle = postTitle.replace('/', '-')
 	while '\\' in postTitle :
 		postTitle = postTitle.replace('/', '-')
-		
+
 	#if 'imgur' in url:
 		#print(url, filename)
 
@@ -91,7 +88,7 @@ def savefile(subreddit, submission, url, filename, postTitle):
 				localFileName = filename + os.sep + postTitle + os.sep + imageFile
 				print("local" + ' ' + localFileName)
 				if not os.path.isfile(localFileName):
-					downloadImage('http:' + match['href'], localFileName)
+					downloadImage('http:' + match['href'], localFileName, postTitle)
 		if 'gfycat.com' in url:
 			downloadURL, filenameToSave = parsegfycat(url)
 			
@@ -99,7 +96,7 @@ def savefile(subreddit, submission, url, filename, postTitle):
 				os.mkdir(filename)
 
 			if not os.path.isfile( filename + os.sep + filenameToSave):
-				downloadImage(downloadURL, filename + os.sep + filenameToSave)
+				downloadImage(downloadURL, filename + os.sep + filenameToSave, postTitle)
 	else :
 		if '.jpg' in url:
 			postTitle += '.jpg'
@@ -107,8 +104,8 @@ def savefile(subreddit, submission, url, filename, postTitle):
 			postTitle += '.png'
 		if '.gif' in url:
 			postTitle += '.gif'
-		if not os.path.isfile( filename + os.sep + postTitle):	
-			downloadImage(url, filename + os.sep + postTitle)
+		if not os.path.isfile( filename + os.sep + postTitle):  
+			downloadImage(url, filename + os.sep + postTitle, postTitle)
 
 def parsegfycat(url):
 	#http://gfycat.com/cajax/get/
@@ -128,16 +125,18 @@ def parsegfycat(url):
 	#print (newurl)
 	return newurl, fnts
 
-def downloadImage(url, filename):
+def downloadImage(url, filename, postTitle):
 	#http://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
+	if not os.path.isfile(filename):
+		print("downloading: ", postTitle)
 
-    r = requests.get(url, stream=True)
-    with open(filename, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024): 
-            if chunk: # filter out keep-alive new chunks
-                f.write(chunk)
-                f.flush()
-    return
+	r = requests.get(url, stream=True)
+	with open(filename, 'wb') as f:
+		for chunk in r.iter_content(chunk_size=1024): 
+			if chunk: # filter out keep-alive new chunks
+				f.write(chunk)
+				f.flush()
+	return
 
 def main():
 	parsefile()
