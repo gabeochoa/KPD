@@ -4,10 +4,11 @@ KPD
 An image downloader for reddit (imgur)
 
 
-v3.0
+v4.0
 
-	Gfycat now supported
-	Allows keyword for each subreddit (* for all)
+	imgur galleries fixed
+	fixed ascii problems with other languages
+
 
 ===
 
