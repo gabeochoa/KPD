@@ -3,11 +3,11 @@ import urllib # get images from url
 import os # makes directories
 import time # used to rerun mainFunc every 30 sec
 import requests # used to get html for BS
-from bs4 import BeautifulSoup # used to parse for imgur albums
+from imgurpython import ImgurClient #allows fix of image albums
 import json #used to parse gfycat links
+from keys import *
 
 subreddits = dict([])
-
 def parsefile():
 	f = open('config.txt', 'r')
 	
@@ -26,14 +26,40 @@ def parsefile():
 			cont = False
 	return
 
-def mainfunc():
-	r = praw.Reddit(user_agent='KPD by /u/gabe1118 v3.0')
+def download_album_images(aid, filename, postTitle):
+	client = ImgurClient(im_client, im_secret)
+	imgs = None
+	try:
+		imgs = client.get_album_images(aid)
+	except Exception, e:
+		return
+	
+	print("Downloading Album: " +postTitle)
+	
+	if not os.path.exists(filename+postTitle):
+		os.mkdir(filename+postTitle)
+				
+	for image in imgs:
+		fn = filename + postTitle + os.sep + ((image.link).split(".com/"))[1]
+		print(fn)
+		downloadImage(image.link, fn, postTitle)
+	return
 
+
+def mainfunc():
+	
+	r = None
+	try:
+		r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.2')
+	except requests.exceptions.ConnectionError:
+		print("Connection Error")
+		return
+	
 	for subreddit, keywords in subreddits.items():
 		if not os.path.exists(subreddit):
 			os.makedirs(subreddit)
 	
-		submissions = r.get_subreddit(subreddit).get_new(limit=10000)
+		submissions = r.get_subreddit(subreddit).get_new(limit=10)
 
 		downloadAll = False
 		if (keywords[0]).strip() == '*':
@@ -47,7 +73,7 @@ def mainfunc():
 				Iname = Ina.strip()
 				fn = subreddit+os.sep
 				if not downloadAll:
-					fn += Iname
+					fn += Iname + os.sep
 				if not os.path.exists(fn):
 					os.mkdir(fn)
 				if postTitle.lower().find(Iname.lower()) == -1 and not downloadAll:
@@ -63,32 +89,14 @@ def savefile(subreddit, submission, url, filename, postTitle):
 	while '\\' in postTitle :
 		postTitle = postTitle.replace('/', '-')
 
-	#if 'imgur' in url:
-		#print(url, filename)
-
+	#destroy for unicode characters. 
+	postTitle = postTitle.decode('unicode_escape').encode('ascii','ignore')
+	
 	if '.jpg' not in url and '.png' not in url and '.gif' not in url:
 		if 'http://imgur.com/a/' in url:
 			# This is an album submission.
 			albumId = url[len('http://imgur.com/a/'):]
-			htmlSource = requests.get(url).text
-
-			soup = BeautifulSoup(htmlSource)
-			matches = soup.select('.album-view-image-link a')
-			for match in matches:
-				imageUrl = match['href']
-				if '?' in imageUrl:
-					imageFile = imageUrl[imageUrl.rfind('/') + 1:imageUrl.rfind('?')]
-				else:
-					imageFile = imageUrl[imageUrl.rfind('/') + 1:]
-				#localFileName = 'reddit_%s_%s_album_%s_imgur_%s' % (subreddit, submission.id, albumId, imageFile)
-				if not os.path.exists(filename + os.sep + postTitle):
-					os.mkdir(filename + os.sep + postTitle)
-				if '.jpg' not in url or '.png' not in url or '.gif' not in url:
-					continue
-				localFileName = filename + os.sep + postTitle + os.sep + imageFile
-				print("local" + ' ' + localFileName)
-				if not os.path.isfile(localFileName):
-					downloadImage('http:' + match['href'], localFileName, postTitle)
+			download_album_images(albumId, filename, postTitle)	
 		if 'gfycat.com' in url:
 			downloadURL, filenameToSave = parsegfycat(url)
 			
@@ -127,8 +135,11 @@ def parsegfycat(url):
 
 def downloadImage(url, filename, postTitle):
 	#http://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
+	
 	if not os.path.isfile(filename):
-		print("downloading: ", postTitle)
+		print() #print("downloading: ", postTitle)
+	else:
+		return
 
 	r = requests.get(url, stream=True)
 	with open(filename, 'wb') as f:
@@ -143,9 +154,13 @@ def main():
 	while True:
 		mainfunc()
 		print('Time to sleep')
-		time.sleep(30)
+		time.sleep(100)
 		print("Waking up")
 
 
 if __name__ == '__main__':
 	main()
+
+
+
+
