@@ -34,32 +34,26 @@ def download_album_images(aid, filename, postTitle):
 	except Exception, e:
 		return
 	
-	print("Downloading Album: " +postTitle)
+	#print("Downloading Album: " +postTitle)
 	
 	if not os.path.exists(filename+postTitle):
 		os.mkdir(filename+postTitle)
 				
 	for image in imgs:
 		fn = filename + postTitle + os.sep + ((image.link).split(".com/"))[1]
-		print(fn)
+		#print(fn)
 		downloadImage(image.link, fn, postTitle)
 	return
 
-
 def mainfunc():
 	
-	r = None
-	try:
-		r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.2')
-	except requests.exceptions.ConnectionError:
-		print("Connection Error")
-		return
-	
+	r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.3')
+		
 	for subreddit, keywords in subreddits.items():
 		if not os.path.exists(subreddit):
 			os.makedirs(subreddit)
 	
-		submissions = r.get_subreddit(subreddit).get_new(limit=10)
+		submissions = r.get_subreddit(subreddit).get_new(limit=1000)
 
 		downloadAll = False
 		if (keywords[0]).strip() == '*':
@@ -152,7 +146,12 @@ def downloadImage(url, filename, postTitle):
 def main():
 	parsefile()
 	while True:
-		mainfunc()
+		
+		try:
+			mainfunc()
+		except requests.exceptions.ConnectionError:
+			print("Connection Error")
+		
 		print('Time to sleep')
 		time.sleep(100)
 		print("Waking up")
