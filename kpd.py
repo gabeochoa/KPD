@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import praw # reddit api
 import urllib # get images from url
 import os # makes directories
@@ -34,32 +36,26 @@ def download_album_images(aid, filename, postTitle):
 	except Exception, e:
 		return
 	
-	print("Downloading Album: " +postTitle)
+	#print("Downloading Album: " +postTitle)
 	
 	if not os.path.exists(filename+postTitle):
 		os.mkdir(filename+postTitle)
 				
 	for image in imgs:
 		fn = filename + postTitle + os.sep + ((image.link).split(".com/"))[1]
-		print(fn)
+		#print(fn)
 		downloadImage(image.link, fn, postTitle)
 	return
 
-
 def mainfunc():
 	
-	r = None
-	try:
-		r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.2')
-	except requests.exceptions.ConnectionError:
-		print("Connection Error")
-		return
-	
+	r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.5')
+		
 	for subreddit, keywords in subreddits.items():
 		if not os.path.exists(subreddit):
 			os.makedirs(subreddit)
 	
-		submissions = r.get_subreddit(subreddit).get_new(limit=10)
+		submissions = r.get_subreddit(subreddit).get_new(limit=1000)
 
 		downloadAll = False
 		if (keywords[0]).strip() == '*':
@@ -76,10 +72,22 @@ def mainfunc():
 					fn += Iname + os.sep
 				if not os.path.exists(fn):
 					os.mkdir(fn)
-				if postTitle.lower().find(Iname.lower()) == -1 and not downloadAll:
+				if not matchKeyword(postTitle.lower(), Iname.lower(), downloadAll):
 					continue
 				else :
 					savefile(subreddit, x, x.url, fn, postTitle)
+
+def matchKeyword(postTitle, curKeyword, downloadAll):
+	if downloadAll:
+		return True
+
+	if postTitle.find(curKeyword) != -1: 
+		print("\n\nTitle: "+postTitle+"\n, Keyword: "+curKeyword)
+		return True
+	else:
+		return False
+
+	return False
 
 def savefile(subreddit, submission, url, filename, postTitle):
 	while os.sep in postTitle :
@@ -136,9 +144,7 @@ def parsegfycat(url):
 def downloadImage(url, filename, postTitle):
 	#http://stackoverflow.com/questions/16694907/how-to-download-large-file-in-python-with-requests-py
 	
-	if not os.path.isfile(filename):
-		print() #print("downloading: ", postTitle)
-	else:
+	if os.path.isfile(filename):
 		return
 
 	r = requests.get(url, stream=True)
@@ -152,7 +158,12 @@ def downloadImage(url, filename, postTitle):
 def main():
 	parsefile()
 	while True:
-		mainfunc()
+		
+		try:
+			mainfunc()
+		except requests.exceptions.ConnectionError:
+			print("Connection Error")
+		
 		print('Time to sleep')
 		time.sleep(100)
 		print("Waking up")
