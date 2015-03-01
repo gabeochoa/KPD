@@ -4,11 +4,11 @@ KPD
 An image downloader for reddit (imgur)
 
 
-v4.0
+v4.5
 
 	imgur galleries fixed
 	fixed ascii problems with other languages
-
+	fixed bug where it would download all pictures sometimes
 
 ===
 
@@ -18,7 +18,7 @@ those keywords.
 It will place the images into a folder in this format:
 
 	subreddit/keyword/postname.extention or
-	subreddit/keyword/postname/filename.extention (for albums)
+	subreddit/keyword/postname/filename.extension (for albums)
 
 ===
 
@@ -40,7 +40,9 @@ import urllib # get images from url
 import os # makes directories
 import time # used to rerun mainFunc every 30 sec
 import requests # used to get html for BS
-from bs4 import BeautifulSoup # used to parse for imgur albums
+from imgurpython import ImgurClient #allows fix of image albums
+import json #used to parse gfycat links
+from keys import *
 
 ===
 	TODO:
