@@ -48,7 +48,7 @@ def download_album_images(aid, filename, postTitle):
 	return
 
 def mainfunc():
-	
+
 	r = praw.Reddit(user_agent='KPD by /u/gabe1118 v4.5')
 		
 	for subreddit, keywords in subreddits.items():
