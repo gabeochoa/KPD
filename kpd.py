@@ -82,7 +82,6 @@ def matchKeyword(postTitle, curKeyword, downloadAll):
 		return True
 
 	if postTitle.find(curKeyword) != -1: 
-		print("\n\nTitle: "+postTitle+"\n, Keyword: "+curKeyword)
 		return True
 	else:
 		return False
