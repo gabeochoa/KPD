@@ -25,7 +25,7 @@ It will place the images into a folder in this format:
 You can run by typing: 
 	python kpd.py
 
-Make sure to have a config.txt file, the format for subreddits is
+Make sure to have a config.txt file. Don't forget to install the requirements after creating a virtual environment. The format for subreddits is
 
 	subreddit :: name, name2, name3 
 	subreddit :: * 
